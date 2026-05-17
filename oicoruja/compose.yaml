@@ -1,0 +1,32 @@
+services:
+  npm:
+    restart: unless-stopped
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - 80:80
+      - 443:443
+      - 81:81
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    environment:
+      - MYSQL_HOST=mariadb
+      - MYSQL_PORT=3306
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_NAME=${MYSQL_NAME}
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=${TIMEZONE}
+  mariadb:
+    image: linuxserver/mariadb:latest
+    container_name: mariadb
+    restart: unless-stopped
+    volumes:
+      - ./mariadb:/config
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=${TIMEZONE}
+networks: {}
